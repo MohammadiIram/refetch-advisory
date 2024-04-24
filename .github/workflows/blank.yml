@@ -1,0 +1,29 @@
+name: Refetch 
+
+on:
+  workflow_dispatch:
+    inputs:
+      advisory_id:
+        description: 'Advisory ID'
+        required: true
+        type: string
+
+jobs:
+  refetch:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up prerequisites
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl jq
+        # Any other setup steps can be included here
+
+    - name: Run refetch script
+      env:
+        ADVISORY_ID: ${{ github.event.inputs.advisory_id }}
+      run: |
+        chmod +x ./advisory.sh
+        ./advisory.sh $ADVISORY_ID
